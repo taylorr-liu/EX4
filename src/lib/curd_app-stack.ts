@@ -6,7 +6,7 @@ import { NodejsFunction, NodejsFunctionProps } from '@aws-cdk/aws-lambda-nodejs'
 import { join } from 'path';
 
 export class ApiLambdaCrudDynamoDBStack extends Stack {
-    constructor(app: App, id: string, env?: { env: { account: string | undefined, region: string | undefined; }; }) {
+    constructor(app: App, id: string, env?: { env: { account: string, region: string; }; }) {
         super(app, id);
 
         const dynamoTable = new Table(this, 'items', {
@@ -30,7 +30,7 @@ export class ApiLambdaCrudDynamoDBStack extends Stack {
                     'aws-sdk', // Use the 'aws-sdk' available in the Lambda runtime
                 ],
             },
-            depsLockFilePath: join(__dirname, '../../../', 'package-lock.json'),
+            depsLockFilePath: join(__dirname, '../../', 'package-lock.json'),
             environment: {
                 PRIMARY_KEY: 'itemId',
                 TABLE_NAME: dynamoTable.tableName,
@@ -40,23 +40,23 @@ export class ApiLambdaCrudDynamoDBStack extends Stack {
 
         // Create a Lambda function for each of the CRUD operations
         const getOneLambda = new NodejsFunction(this, 'getOneItemFunction', {
-            entry: join(__dirname, '../lambdas/get-one', 'index.js'),
+            entry: join(__dirname, '../lambdas/get-one', 'index.ts'),
             ...nodeJsFunctionProps,
         });
         const getAllLambda = new NodejsFunction(this, 'getAllItemsFunction', {
-            entry: join(__dirname, '../lambdas/get-all', 'index.js'),
+            entry: join(__dirname, '../lambdas/get-all', 'index.ts'),
             ...nodeJsFunctionProps,
         });
         const createOneLambda = new NodejsFunction(this, 'createItemFunction', {
-            entry: join(__dirname, '../lambdas/create', 'index.js'),
+            entry: join(__dirname, '../lambdas/create', 'index.ts'),
             ...nodeJsFunctionProps,
         });
         const updateOneLambda = new NodejsFunction(this, 'updateItemFunction', {
-            entry: join(__dirname, '../lambdas/update', 'index.js'),
+            entry: join(__dirname, '../lambdas/update', 'index.ts'),
             ...nodeJsFunctionProps,
         });
         const deleteOneLambda = new NodejsFunction(this, 'deleteItemFunction', {
-            entry: join(__dirname, '../lambdas/delete', 'index.js'),
+            entry: join(__dirname, '../lambdas/delete', 'index.ts'),
             ...nodeJsFunctionProps,
         });
 

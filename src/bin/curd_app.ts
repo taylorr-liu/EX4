@@ -5,12 +5,13 @@ import { ApiLambdaCrudDynamoDBStack } from '../lib/curd_app-stack';
 
 const app = new cdk.App();
 const env: {
-    account: string | undefined,
-    region: string | undefined;
+    account: string,
+    region: string;
 } = {
-    account: process.env.CDK_DEFAULT_ACCOUNT,
-    region: process.env.CDK_DEFAULT_REGION
+    account: process.env.CDK_DEFAULT_ACCOUNT!,
+    region: process.env.CDK_DEFAULT_REGION!
 };
+
 new ApiLambdaCrudDynamoDBStack(app, 'CurdAppStack', {
     /* If you don't specify 'env', this stack will be environment-agnostic.
      * Account/Region-dependent features and context lookups will not work,

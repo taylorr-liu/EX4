@@ -25,6 +25,8 @@ export const handler = async (event: any = {}): Promise<any> => {
     if (!editedItem || editedItemProperties.length < 1) {
         return { statusCode: 400, body: 'invalid request, no arguments provided' };
     }
+    console.log("editedItem:" + editedItem);
+    console.log("editedItemProperties:" + editedItemProperties);
 
     const firstProperty = editedItemProperties.splice(0, 1);
     const params: any = {
@@ -37,6 +39,7 @@ export const handler = async (event: any = {}): Promise<any> => {
         ReturnValues: 'UPDATED_NEW'
     };
     params.ExpressionAttributeValues[`:${firstProperty}`] = editedItem[`${firstProperty}`];
+    console.log("long:" + params.ExpressionAttributeValues[`:${firstProperty}`]);
 
     editedItemProperties.forEach(property => {
         params.UpdateExpression += `, ${property} = :${property}`;
@@ -48,7 +51,10 @@ export const handler = async (event: any = {}): Promise<any> => {
         return { statusCode: 204, body: '' };
     } catch (dbError) {
         const errorResponse = dbError.code === 'ValidationException' && dbError.message.includes('reserved keyword') ?
-            DYNAMODB_EXECUTION_ERROR : RESERVED_RESPONSE;
+            RESERVED_RESPONSE : DYNAMODB_EXECUTION_ERROR;
+        console.log("dbError" + dbError);
+        console.log("dbError.code" + dbError.code);
+        console.log("dbError.message" + dbError.message);
         return { statusCode: 500, body: errorResponse };
     }
 };
